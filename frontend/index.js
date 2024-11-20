@@ -680,7 +680,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Function to export data to CSV
         const exportToCSV = (data) => {
-            const headers = ['Rank', 'Roll Number','up', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
+            const headers = ['Rank', 'Roll Number','up', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL','Last question'];
             const csvRows = data.map((student, index) => {
                 return [
                     index + 1,
@@ -714,6 +714,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const row = document.createElement('tr');
                 var diff = student.totalSolved - oldData[student.roll];
                 if( diff === student.totalSolved) diff =0;
+                if(student.recent){
+                    if(student.recent.recentSubmissions.length > 0)
+                    val = student.recent.recentSubmissions[0].title || 'nothing';
+                }else{
+                    val="nothing";
+                }
+                
+                console.log(student.name + " question " + val);
                 // console.log(diff);
                 row.classList.add('border-b', 'border-gray-700');
                 row.innerHTML = `
@@ -730,6 +738,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
                     <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
                     <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
+                    <td class="p-4 text-red-400">${val}</td>
                 `;
                 leaderboardBody.appendChild(row);
             });

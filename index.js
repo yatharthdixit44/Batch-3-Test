@@ -6,8 +6,33 @@ const app = express();
 const port = 3001;
 
 app.use(cors());
+const recentSub = `
+  query recentAcSubmissions($username: String!, $limit: Int!) {
+    recentAcSubmissionList(username: $username, limit: $limit) {
+      id
+      title
+      timestamp
+      statusDisplay
+      runtime
+      memory
+      lang
+    }
+  }
+`;
 
-
+async function fetchLeet(username) {
+  const graphqlUrl = "https://leetcode.com/graphql";
+  const recentSubmissions = await axios.post(graphqlUrl, {
+    query: recentSub,
+    variables: {
+      username,
+      limit: 5,  
+    },
+  });
+  return {
+    recentSubmissions: recentSubmissions.data.data.recentAcSubmissionList || [],
+  };
+}
 async function fetchAndSaveData() {
   try {
     console.log('Starting to read input files...');
@@ -55,6 +80,10 @@ async function fetchAndSaveData() {
           } else {
             console.log(`No data found for ${username}`);
           }
+
+          const recent = await fetchLeet(username);
+          studentData.recent = recent;
+          
         } catch (error) {
           console.error(`Error fetching data for ${username}:`, error);
         }
