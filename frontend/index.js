@@ -647,22 +647,22 @@ document.addEventListener('DOMContentLoaded', async () => {
           "#00aba9",
         ];
         
-        new Chart("myChart", {
-          type: "pie",
-          data: {
-            labels: xValues,
-            datasets: [{
-              backgroundColor: barColors,
-              data: yValues
-            }]
-          },
-          options: {
-            title: {
-              display: true,
-              text: "Hostellers and DaySchollars"
-            }
-          }
-        });
+        // new Chart("myChart", {
+        //   type: "pie",
+        //   data: {
+        //     labels: xValues,
+        //     datasets: [{
+        //       backgroundColor: barColors,
+        //       data: yValues
+        //     }]
+        //   },
+        //   options: {
+        //     title: {
+        //       display: true,
+        //       text: "Hostellers and DaySchollars"
+        //     }
+        //   }
+        // });
 
         
         // Populate section filter dropdown
@@ -717,16 +717,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 var d;
                 if( diff === student.totalSolved) diff =0;
                 if(student.recent){
-                    if(student.recent.recentSubmissions.length > 0)
-                    val = student.recent.recentSubmissions[0].title || 'nothing';
+                    if(student.recent.recentSubmissions.length > 0){
+                    val = student.recent.recentSubmissions[0].title || '';
                      utcSeconds = student.recent.recentSubmissions[0].timestamp || 0;;
                      d = new Date(0); // The 0 there is the key, which sets the date to the epoch
                     d.setUTCSeconds(utcSeconds);
+                }else {val = "" }
                 }else{
-                    val="nothing";
+                    val="";
+                    utcSeconds = "";
                 }
                 
-                console.log(student.name + " question " + val + " date " + d);
+                // console.log(student.name + " question " + val ? val : "" + " date " + d ? d : "");
                 // console.log(diff);
                 row.classList.add('border-b', 'border-gray-700');
                 row.innerHTML = `
@@ -743,7 +745,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
                     <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
                     <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
-                    <td class="p-4 text-red-400">${val + " " + d}</td>
+                    <td class="p-4">
+  <span style="color: red; font-weight: bold;">${val ? val : "Not found"}</span> 
+  <span style="color: blue; font-style: italic;">at</span> 
+  <br> 
+  <span style="color: green; text-decoration: underline;">${d ? d : "Unknown date"}</span>
+</td>
+
                 `;
                 leaderboardBody.appendChild(row);
             });
