@@ -716,10 +716,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 var utcSeconds=0;
                 var d;
                 if( diff === student.totalSolved) diff =0;
-                if(student.recent){
-                    if(student.recent.recentSubmissions.length > 0){
-                    val = student.recent.recentSubmissions[0].title || '';
-                     utcSeconds = student.recent.recentSubmissions[0].timestamp || 0;;
+                if(student.recentSubmissions){
+                    if(student.recentSubmissions.length > 0){
+                    val = student.recentSubmissions[0].title || '';
+                     utcSeconds = student.recentSubmissions[0].timestamp || 0;;
                      d = new Date(0); // The 0 there is the key, which sets the date to the epoch
                     d.setUTCSeconds(utcSeconds);
                 }else {val = "" }
